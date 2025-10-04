@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>About — Praxis</title>
+    <link rel="stylesheet" href="/src/index.css">
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: #0f1724; color: #e6eef8; margin: 0; }
+      .container { max-width: 900px; margin: 48px auto; padding: 28px; background: #0b1220; border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
+      h1 { margin-top: 0; color: #fff; }
+      h2 { color: #cfe8ff; }
+      p, li, pre { color: #c9d8ee; }
+      pre { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; overflow: auto; }
+      code { background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Helvetica Neue', monospace; }
+      a { color: #7bd3ff; }
+      .meta { font-size: 13px; color: #9fb6d8; margin-bottom: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>About Praxis</h1>
+      <p class="meta">Interactive AI tutoring for hands-on programming practice • Built with Vite, React, and TypeScript</p>
+
+      <p><strong>Praxis</strong> is an in-browser, AI-driven programming tutor. The goal is to help learners build skills by solving small, incremental coding challenges while receiving supportive, Socratic guidance from an AI tutor.</p>
+
+      <h2>What you can do</h2>
+      <ul>
+        <li>Describe a programming task or ask for a learning exercise via the chat panel.</li>
+        <li>Receive a short explanation and a focused coding challenge from the AI (the model also provides a small set of automated tests).</li>
+        <li>Edit and run code in the embedded Monaco editor, then run the provided tests to validate your solution.</li>
+        <li>View console output and per-test results, get tailored hints, and progress to more advanced challenges as you succeed.</li>
+      </ul>
+
+      <h2>How it works (technical overview)</h2>
+      <ol>
+        <li>The app sends the conversation + a strict system prompt to an LLM (Gemini) through <code>@google/genai</code>. The LLM returns a JSON object with an <code>explanation</code>, a <code>challenge</code>, and an array of <code>tests</code>.</li>
+        <li>Tests are small JavaScript boolean expressions (for example, <code>add(2,3) === 5</code>). They are evaluated client-side in a sandboxed Web Worker to keep the UI responsive and isolated from execution.</li>
+        <li>The system prompt enforces pedagogical rules: don't provide final code solutions, use a Socratic tone, and always return a single JSON response matching the expected schema.</li>
+      </ol>
+
+      <h2>Privacy & security</h2>
+      <ul>
+        <li>The app requires you to provide an API key for the AI service. The key is used at runtime and is not persisted by the client (it is stored only in memory during the session).</li>
+        <li>All code execution is local to your browser inside a Web Worker. However, executing arbitrary code in-browser has inherent risks; use discretion when running untrusted snippets.</li>
+        <li>No user data is sent to the repository owners by default — only interactions routed through the AI provider go to the API according to that provider's terms.</li>
+      </ul>
+
+      <h2>Local development</h2>
+      <p>To run Praxis locally:</p>
+      <pre><code>git clone https://github.com/your-username/praxis.git
+cd praxis
+npm install
+npm run dev</code></pre>
+
+      <h2>Customize the tutor</h2>
+      <p>If you want to change the tutor's behavior (tone, rules, curriculum), edit <code>src/constants.ts</code>. That file contains the system prompt which defines the tutor persona and interaction rules. If you change the response schema, update <code>src/App.tsx</code> to parse the new format.</p>
+
+      <h2>Contributing & Credits</h2>
+      <p>Contributions, issues, and feature requests are welcome — please open an issue or submit a pull request on GitHub. This project uses these notable libraries:</p>
+      <ul>
+        <li>Vite (dev tooling)</li>
+        <li>React + TypeScript (UI)</li>
+        <li>Monaco Editor (in-browser code editing)</li>
+        <li><code>@google/genai</code> (Gemini model integration)</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>Questions or requests? Reach out via GitHub: <a href="https://github.com/smpdl">@smpdl</a> or email <a href="mailto:spaudel@vassar.edu">spaudel@vassar.edu</a>.</p>
+
+      <p style="margin-top:18px"><a href="/">Return home</a></p>
+    </div>
+  </body>
+</html>
